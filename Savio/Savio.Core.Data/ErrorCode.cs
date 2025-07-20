@@ -30,7 +30,6 @@ namespace Savio.Core.Data
         public const int ServiceError = -1001;
         public static string ToErrorMsg(this int code)
         {
-            // Get all fields in ErrorCode class
             var fields = typeof(ErrorCode)
                 .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 

@@ -1,18 +1,20 @@
-# Build stage
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /app
+# STAGE 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
 
-# copy csproj and restore
-COPY *.csproj ./
+# Copy solution and restore
+COPY ../../SavioAPI.sln ./
+COPY ../Savio.API/Savio.API.csproj ./Savio.API/
 RUN dotnet restore
 
-# copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+# Copy the rest of the source code
+COPY ../Savio.API/. ./Savio.API/
+WORKDIR /src/Savio.API
+RUN dotnet publish -c Release -o /app/publish
 
-# Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+# STAGE 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "Savio.API.dll"]

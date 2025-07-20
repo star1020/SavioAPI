@@ -1,0 +1,6 @@
+.vs/*
+*/.vs/*
+*/packages/*
+*/*/bin/*
+*/*/obj/*
+*/*/logs/app-log.txt

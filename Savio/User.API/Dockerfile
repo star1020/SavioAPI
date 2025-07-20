@@ -1,18 +1,14 @@
-# Build stage
+# For Savio.API and User.API
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet publish -c Release -o /app
+
+FROM base AS final
 WORKDIR /app
-
-# copy csproj and restore
-COPY *.csproj ./
-RUN dotnet restore
-
-# copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /app
-COPY --from=build /app/out .
-
+COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "User.API.dll"]

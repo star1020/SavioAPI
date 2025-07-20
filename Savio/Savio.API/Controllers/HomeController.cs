@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using System.Web.Mvc;
 
 namespace Savio.API.Controllers
 {
-    public class HomeController : Controller
+    [ApiController]
+    [Route("/")]
+    public class HomeController : ControllerBase
     {
         public ActionResult Index()
         {
@@ -17,7 +19,7 @@ namespace Savio.API.Controllers
 
             var buildDate = DateTime.Now;
 
-            string message = $"MoneyRecord API Service is Running\n" +
+            string message = $"Savio API Service is Running\n" +
                              $"Assembly: {assemblyName.Name}\n" +
                              $"Version: {version}\n" +
                              $"Build Date: {buildDate}";

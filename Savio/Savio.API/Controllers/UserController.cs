@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NLog;
+using Savio.Core;
 using Savio.Core.Data;
 using System;
 using System.Collections.Generic;
@@ -9,14 +11,14 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Web;
-using System.Web.Http;
 using User.API.App_Service;
 using User.API.Models;
 
 namespace User.API.Controllers
 {
-    [RoutePrefix("user")]
-    public class UserController : ApiController
+    [ApiController]
+    [Route("user")]
+    public class UserController : ControllerBase
     {
         readonly IUserAppService _userAppService;
         public UserController()
@@ -26,11 +28,11 @@ namespace User.API.Controllers
 
         [HttpPost]
         [Route("GetAllUsers")]
-        public HttpResponseMessage GetAllUsers()
+        public IActionResult GetAllUsers()
         {
             var w = Stopwatch.StartNew();
             var correlationId = Guid.NewGuid().ToString();
-            var method = MethodBase.GetCurrentMethod().Name;
+            string method = LogHelper.GetMethodName();
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> no body");
 
@@ -45,20 +47,17 @@ namespace User.API.Controllers
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
 
-            return new HttpResponseMessage()
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json")
-            };
+            return Ok(response);
         }
 
 
         [HttpPost]
         [Route("AddEditUsers")]
-        public HttpResponseMessage AddEditUsers(UserModel request)
+        public IActionResult AddEditUsers(UserModel request)
         {
             var w = Stopwatch.StartNew();
             var correlationId = Guid.NewGuid().ToString();
-            var method = MethodBase.GetCurrentMethod().Name;
+            string method = LogHelper.GetMethodName();
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
 
@@ -72,10 +71,8 @@ namespace User.API.Controllers
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
 
-            return new HttpResponseMessage()
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json")
-            };
+            return Ok(response);
         }
+
     }
 }

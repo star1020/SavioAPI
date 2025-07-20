@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Configuration;
+using NLog;
 using Savio.Core.Data;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,10 @@ namespace User.Proxy
         private readonly EndpointAddress _endpoint;
         private readonly ChannelFactory<IUserService> _channelFactory;
 
-        public UserServiceProxy(int maxConnections = 100)
+        public UserServiceProxy(IConfiguration configuration, int maxConnections = 100)
         {
-            var ip = ConfigurationManager.AppSettings["user-service-ip"];
-            var port = int.Parse(ConfigurationManager.AppSettings["user-service-port"]);
+            var ip = configuration["UserService:IP"];
+            var port = configuration["UserService:Port"];
 
             var url = $"net.tcp://{ip}:{port}/UserService";
 
@@ -52,7 +53,7 @@ namespace User.Proxy
             catch (Exception ex)
             {
                 LogManager.GetCurrentClassLogger().Error(ex);
-                return new Tuple<int, List<UserModel>>(-1, new List<UserModel>());
+                return new Tuple<int, List<UserModel>>(-1001, new List<UserModel>());
             }
             finally
             {

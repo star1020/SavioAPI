@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Savio.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,7 +16,8 @@ namespace User.API
         {
             try
             {
-                UserService = new UserServiceProxy();
+                var configuration = GetConfig.Configuration;
+                UserService = new UserServiceProxy(configuration);
             }
             catch (Exception ex)
             {

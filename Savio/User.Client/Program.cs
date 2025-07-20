@@ -1,14 +1,9 @@
 ﻿using NLog;
-using Npgsql;
-using Savio.Core;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using User.Contract;
+using Savio.Core;
 
 namespace User.Client
 {
@@ -60,22 +55,22 @@ namespace User.Client
                 LogManager.GetCurrentClassLogger().Error(exp);
             }
         }
+    }
 
-        public class UserServiceHost : ServiceHost.AbstractServiceHost<IUserService>
+    public class UserServiceHost : AbstractServiceHost<IUserService>
+    {
+        private readonly IUserRepository _repo;
+
+        public UserServiceHost(string name, string localEndpoint, string remoteEndpoint, int maxConcurrentCalls)
+            : base(name, localEndpoint, remoteEndpoint, maxConcurrentCalls)
         {
-            readonly IUserRepository _repo;
-            public UserServiceHost(string name, string localEndpoint, string remoteEndpoint, int maxConcurrentCalls)
-                : base(name, localEndpoint, remoteEndpoint, maxConcurrentCalls)
-            {
-                _repo = new UserRepository(
-                ConfigurationManager.ConnectionStrings["Postgres"].ConnectionString);
+            var configuration = GetConfig.Configuration;
+            _repo = new UserRepository(configuration);
+        }
 
-            }
-
-            protected override IUserService InitServiceInstance()
-            {
-                return new UserService(_repo);
-            }
+        protected override IUserService InitServiceInstance()
+        {
+            return new UserService(_repo);
         }
     }
 }

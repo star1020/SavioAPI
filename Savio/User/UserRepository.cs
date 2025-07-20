@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using NLog;
 using Npgsql;
 using Savio.Core.Data;
@@ -22,8 +23,9 @@ namespace User
     {
         private readonly string _connString;
 
-        public UserRepository() : this(ConfigurationManager.ConnectionStrings["Postgres"].ConnectionString)
+        public UserRepository(IConfiguration configuration)
         {
+            _connString = configuration.GetConnectionString("Postgres");
         }
 
         public UserRepository(string connection)

@@ -1,0 +1,14 @@
+services:
+  savio-api:
+    build: ./Savio/Savio.API
+    ports:
+      - "5001:80"
+
+  user-api:
+    build: ./Savio/User.API
+    ports:
+      - "5002:80"
+
+  user-client:
+    build: ./Savio/User.Client
+    command: ["dotnet", "User.Client.dll"]

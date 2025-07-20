@@ -1,5 +1,5 @@
 # Must use Windows Server Core base image
-FROM mcr.microsoft.com/dotnet/framework/sdk:4.8 AS build
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.7 AS build
 WORKDIR /src
 
 # Copy and restore NuGet packages
@@ -10,7 +10,7 @@ RUN nuget restore
 RUN msbuild "Savio.API.csproj" /p:Configuration=Release /p:OutputPath=/app
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.7
 WORKDIR /inetpub/wwwroot
 COPY --from=build /app .
 

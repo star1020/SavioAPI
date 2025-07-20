@@ -26,6 +26,7 @@ namespace User.API.Controllers
             _userAppService = new UserAppService();
         }
 
+        [HttpGet]
         [HttpPost]
         [Route("GetAllUsers")]
         public IActionResult GetAllUsers()

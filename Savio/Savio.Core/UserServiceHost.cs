@@ -23,7 +23,7 @@ namespace Savio.Core
 
         public void Close()
         {
-            Dispose(); // clean and simple
+            Dispose();
         }
     }
 }

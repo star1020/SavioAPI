@@ -34,24 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreWCF.ConfigurationManager, Version=1.7.0.0, Culture=neutral, PublicKeyToken=64a15a7b0fecbbfb, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreWCF.ConfigurationManager.1.7.0\lib\netstandard2.0\CoreWCF.ConfigurationManager.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreWCF.Http, Version=1.7.0.0, Culture=neutral, PublicKeyToken=64a15a7b0fecbbfb, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreWCF.Http.1.7.0\lib\netstandard2.0\CoreWCF.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreWCF.NetFramingBase, Version=1.7.0.0, Culture=neutral, PublicKeyToken=64a15a7b0fecbbfb, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreWCF.NetFramingBase.1.7.0\lib\netstandard2.0\CoreWCF.NetFramingBase.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreWCF.NetTcp, Version=1.7.0.0, Culture=neutral, PublicKeyToken=64a15a7b0fecbbfb, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreWCF.NetTcp.1.7.0\lib\netstandard2.0\CoreWCF.NetTcp.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreWCF.Primitives, Version=1.7.0.0, Culture=neutral, PublicKeyToken=64a15a7b0fecbbfb, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreWCF.Primitives.1.7.0\lib\netstandard2.0\CoreWCF.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="CoreWCF.WebHttp, Version=1.7.0.0, Culture=neutral, PublicKeyToken=64a15a7b0fecbbfb, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreWCF.WebHttp.1.7.0\lib\netstandard2.0\CoreWCF.WebHttp.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNetCore.Authentication, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Authentication.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.dll</HintPath>
     </Reference>

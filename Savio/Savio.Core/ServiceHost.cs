@@ -1,6 +1,4 @@
-﻿using CoreWCF;
-using CoreWCF.Configuration;
-using System;
+﻿using System;
 using System.ServiceModel;
 
 namespace Savio.Core

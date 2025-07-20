@@ -26,6 +26,8 @@ namespace Savio.Core.Data
         [ErrorMessage("Success.")]
         public const int Success = 0;
 
+        [ErrorMessage("Service Error/Not Open.")]
+        public const int ServiceError = -1001;
         public static string ToErrorMsg(this int code)
         {
             // Get all fields in ErrorCode class

@@ -28,7 +28,6 @@
     <ProjectReference Include="..\Savio.Core.Data\Savio.Core.Data.csproj" />
     <ProjectReference Include="..\Savio.Core\Savio.Core.csproj" />
     <ProjectReference Include="..\User.Contract\User.Contract.csproj" />
-    <ProjectReference Include="..\User.Proxy\User.Proxy.csproj" />
   </ItemGroup>
 
 </Project>

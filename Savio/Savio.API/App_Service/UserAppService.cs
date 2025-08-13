@@ -21,32 +21,14 @@ namespace User.API.App_Service
     public class UserAppService : IUserAppService
     {
         private readonly IUserService _userService;
-        private readonly IUserRepository _userDb;
-        private readonly bool _isProd;
 
         public UserAppService()
         {
             _userService = GlobalContext.UserService;
-            _userDb = GlobalContext.UserRepository;
-
-            var env = GetConfig.Configuration["Env"];
-            _isProd = !string.IsNullOrWhiteSpace(env) && env.Equals("PROD", StringComparison.OrdinalIgnoreCase);
         }
 
         public Tuple<int, List<UserModel>> GetAllUsers()
         {
-            if (_isProd)
-            {
-                var method = MethodBase.GetCurrentMethod().Name;
-                LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> no data");
-                var p = _userDb.GetAllUsers();
-                LogManager.GetCurrentClassLogger().Info($"[{method}] UserInfo -> {JsonConvert.SerializeObject(p)}");
-
-                if (p == null) return new Tuple<int, List<UserModel>>(ErrorCode.OperationError, new List<UserModel>());
-                if (p.Count == 0) return new Tuple<int, List<UserModel>>(ErrorCode.OperationError, new List<UserModel>());
-
-                return new Tuple<int, List<UserModel>>(ErrorCode.Success, p);
-            }
             var r = _userService.GetAllUsers();
             return new Tuple<int, List<UserModel>>(r.Item1, r.Item2);
 
@@ -54,17 +36,8 @@ namespace User.API.App_Service
 
         public int AddEditUsers(UserModel request)
         {
-            if (_isProd)
-            {
-                var method = MethodBase.GetCurrentMethod().Name;
-                LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(request)}");
-                var r = _userDb?.InsertUser(request) ?? -1;
-                LogManager.GetCurrentClassLogger().Info($"[{method}] Result -> {JsonConvert.SerializeObject(r)}");
-                return r;
-            }
             return _userService.InsertUser(request);
         }
-
 
     }
 }

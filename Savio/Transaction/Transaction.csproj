@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CC5851FE-B6EE-4707-92D9-E2D04E61BD0C}</ProjectGuid>
+    <ProjectGuid>{81934542-B9ED-4D31-AD43-545B98235510}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>User</RootNamespace>
-    <AssemblyName>User</AssemblyName>
+    <RootNamespace>Transaction</RootNamespace>
+    <AssemblyName>Transaction</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,22 +40,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\@ref\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NLog">
       <HintPath>..\@ref\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql, Version=8.0.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Npgsql">
       <HintPath>..\@ref\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,18 +57,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserRepository.cs" />
-    <Compile Include="UserService.cs" />
+    <Compile Include="TransactionRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransactionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Savio.Core.Data\Savio.Core.Data.csproj">
       <Project>{6746475d-5ca9-47f5-8632-366b52de9b2b}</Project>
       <Name>Savio.Core.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\User.Contract\User.Contract.csproj">
-      <Project>{2DA66CD3-0259-45E2-8563-CD445EC19140}</Project>
-      <Name>User.Contract</Name>
+    <ProjectReference Include="..\Transaction.Contract\Transaction.Contract.csproj">
+      <Project>{5231174c-2e7b-437a-8b6c-4f29f8cc4eb8}</Project>
+      <Name>Transaction.Contract</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

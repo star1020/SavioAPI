@@ -14,9 +14,8 @@ namespace Category
 {
     public interface ICategoryRepository : IDisposable
     {
-        List<CategoryModel> GetAllCategories();
-        int InsertCategory(CategoryModel user);
-        CategoryModel GetCategoryById(int id);
+        List<CategoryModel> GetAllCategoriesWithData(CategoryModel category);
+        int InsertCategory(CategoryModel category);
         int DeleteCategoryById(int id);
     }
     public class CategoryRepository : ICategoryRepository
@@ -33,36 +32,41 @@ namespace Category
             _connString = connection;
         }
 
-        public List<CategoryModel> GetAllCategories()
+        public List<CategoryModel> GetAllCategoriesWithData(CategoryModel category)
         {
             try
             {
-                var users = new List<CategoryModel>();
+                var txns = new List<CategoryModel>();
 
                 using (var conn = new NpgsqlConnection(_connString))
                 {
                     conn.Open();
 
-                    using (var cmd = new NpgsqlCommand("SELECT * FROM category_get_all()", conn))
-                    using (var reader = cmd.ExecuteReader())
+                    using (var cmd = new NpgsqlCommand(
+                        "SELECT * FROM category_get_all_with_data(@p_id)", conn))
                     {
-                        var properties = typeof(CategoryModel).GetProperties();
+                        cmd.Parameters.AddWithValue("p_id", category.id);
 
-                        while (reader.Read())
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            var item = new CategoryModel();
+                            var properties = typeof(CategoryModel).GetProperties();
 
-                            foreach (var property in properties)
+                            while (reader.Read())
                             {
-                                InternalProcess(property, reader, item);
-                            }
+                                var item = new CategoryModel();
 
-                            users.Add(item);
+                                foreach (var property in properties)
+                                {
+                                    InternalProcess(property, reader, item);
+                                }
+
+                                txns.Add(item);
+                            }
                         }
                     }
                 }
 
-                return users;
+                return txns;
             }
             catch (Exception ex)
             {
@@ -98,12 +102,12 @@ namespace Category
                     conn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                            "CALL category_upsert(@p_id, @p_icon, @p_name, @p_action)", conn))
+                            "SELECT category_upsert(@p_id, @p_icon, @p_name, @p_action)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", category.id);
-                        cmd.Parameters.AddWithValue("p_icon", category.icon);
+                        cmd.Parameters.AddWithValue("p_icon", NpgsqlTypes.NpgsqlDbType.Text).Value = category.icon ?? (object)DBNull.Value;
                         cmd.Parameters.AddWithValue("p_name", category.name);
-                        cmd.Parameters.AddWithValue("p_action", category.action);
+                        cmd.Parameters.AddWithValue("p_action", NpgsqlTypes.NpgsqlDbType.Text).Value = category.action ?? (object)DBNull.Value;
 
                         cmd.ExecuteNonQuery();
                     }
@@ -119,41 +123,6 @@ namespace Category
             }
         }
 
-
-        public CategoryModel GetCategoryById(int id)
-        {
-            try
-            {
-                var conn = new NpgsqlConnection(_connString);
-                conn.Open();
-
-                var cmd = new NpgsqlCommand("SELECT * FROM category_get_by_id(@p_id)", conn);
-                cmd.Parameters.AddWithValue("p_id", id);
-
-                var reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    return new CategoryModel
-                    {
-                        id = reader.GetInt32(reader.GetOrdinal("id")),
-                        icon = reader.GetString(reader.GetOrdinal("icon")),
-                        name = reader.GetString(reader.GetOrdinal("name")),
-                        action = reader.GetString(reader.GetOrdinal("action")),
-                        created_at = reader.IsDBNull(reader.GetOrdinal("created_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("created_at")),
-                        updated_at = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
-                    };
-                }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                LogManager.GetCurrentClassLogger().Error(ex);
-                return null;
-            }
-        }
-
         public int DeleteCategoryById(int id)
         {
             try
@@ -162,7 +131,7 @@ namespace Category
                 {
                     conn.Open();
 
-                    using (var cmd = new NpgsqlCommand("CALL category_delete(@p_id)", conn))
+                    using (var cmd = new NpgsqlCommand("SELECT category_delete(@p_id)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", id);
                         cmd.ExecuteNonQuery();

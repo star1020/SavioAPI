@@ -8,9 +8,8 @@ namespace Transaction.API.App_Service
 {
     public interface ITransactionAppService : IApplicationService
     {
-        Tuple<int, List<TransactionModel>> GetAllTransactions();
+        Tuple<int, List<TransactionModel>> GetAllTransactionsWithData(TransactionModel request);
         int AddEditTransaction(TransactionModel request);
-        Tuple<int, TransactionModel> GetTransactionById(int id);
         int DeleteTransactionById(int id);
     }
     public class TransactionAppService : ITransactionAppService
@@ -22,21 +21,15 @@ namespace Transaction.API.App_Service
             _transactionService = GlobalContext.TransactionService;
         }
 
-        public Tuple<int, List<TransactionModel>> GetAllTransactions()
+        public Tuple<int, List<TransactionModel>> GetAllTransactionsWithData(TransactionModel request)
         {
-            var r = _transactionService.GetAllTransactions();
+            var r = _transactionService.GetAllTransactionsWithData(request);
             return new Tuple<int, List<TransactionModel>>(r.Item1, r.Item2);
         }
 
         public int AddEditTransaction(TransactionModel request)
         {
             return _transactionService.InsertTransaction(request);
-        }
-
-        public Tuple<int, TransactionModel> GetTransactionById(int id)
-        {
-            var r = _transactionService.GetTransactionById(id);
-            return new Tuple<int, TransactionModel>(r.Item1, r.Item2);
         }
 
         public int DeleteTransactionById(int id)

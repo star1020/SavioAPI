@@ -22,19 +22,17 @@ namespace Transaction
             _db = db;
         }
 
-
-        public Tuple<int, List<TransactionModel>> GetAllTransactions()
+        public Tuple<int, List<TransactionModel>> GetAllTransactionsWithData(TransactionModel transaction)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> no data");
-            var r = _db.GetAllTransactions();
+            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(transaction)}");
+            var r = _db.GetAllTransactionsWithData(transaction);
             LogManager.GetCurrentClassLogger().Info($"[{method}] TransactionInfo -> {JsonConvert.SerializeObject(r)}");
 
             if (r == null) return new Tuple<int, List<TransactionModel>>(ErrorCode.OperationError, new List<TransactionModel>());
             if (r.Count == 0) return new Tuple<int, List<TransactionModel>>(ErrorCode.OperationError, new List<TransactionModel>());
 
             return new Tuple<int, List<TransactionModel>>(ErrorCode.Success, r);
-
         }
 
         public int InsertTransaction(TransactionModel transaction)
@@ -46,26 +44,14 @@ namespace Transaction
             return r;
         }
 
-        public Tuple<int, TransactionModel> GetTransactionById(int id)
-        {
-            var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> ${id}");
-            var r = _db.GetTransactionById(id);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] TransactionInfo -> {JsonConvert.SerializeObject(r)}");
-
-            if (r == null) return new Tuple<int, TransactionModel>(ErrorCode.OperationError, new TransactionModel());
-
-            return new Tuple<int, TransactionModel>(ErrorCode.Success, r);
-
-        }
-
         public int DeleteTransactionById(int id)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> ${id}");
+            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {id}");
             var r = _db.DeleteTransactionById(id);
             LogManager.GetCurrentClassLogger().Info($"[{method}] TransactionInfo -> {JsonConvert.SerializeObject(r)}");
             return r;
         }
+
     }
 }

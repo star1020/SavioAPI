@@ -13,11 +13,4 @@ namespace Transaction.API.Models
         public List<TransactionModel> Transaction { get; set; }
     }
 
-    public class GetTransactionResponse
-    {
-        public int Code { get; set; }
-        public string Message { get; set; }
-        public TransactionModel Transaction { get; set; }
-    }
-
 }

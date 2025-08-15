@@ -10,77 +10,74 @@ using NLog;
 using Npgsql;
 using Savio.Core.Data;
 
-namespace Transaction
+namespace Notification
 {
-    public interface ITransactionRepository : IDisposable
+    public interface INotificationRepository : IDisposable
     {
-        List<TransactionModel> GetAllTransactionsWithData(TransactionModel txn);
-        int InsertTransaction(TransactionModel user);
-        int DeleteTransactionById(int id);
+        List<NotificationModel> GetAllNotificationsWithData(NotificationModel notification);
+        int InsertNotification(NotificationModel user);
+        int DeleteNotificationById(int id);
     }
-    public class TransactionRepository : ITransactionRepository
+    public class NotificationRepository : INotificationRepository
     {
         private readonly string _connString;
 
-        public TransactionRepository(IConfiguration configuration)
+        public NotificationRepository(IConfiguration configuration)
         {
             _connString = configuration.GetConnectionString("Postgres");
         }
 
-        public TransactionRepository(string connection)
+        public NotificationRepository(string connection)
         {
             _connString = connection;
         }
 
-        public List<TransactionModel> GetAllTransactionsWithData(TransactionModel txn)
+        public List<NotificationModel> GetAllNotificationsWithData(NotificationModel notification)
         {
             try
             {
-                var txns = new List<TransactionModel>();
+                var notifications = new List<NotificationModel>();
 
                 using (var conn = new NpgsqlConnection(_connString))
                 {
                     conn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                        "SELECT * FROM transaction_get_all_with_data(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id)", conn))
+                        "SELECT * FROM notification_get_all_with_data(@p_id, @p_notification_type)", conn))
                     {
-                        cmd.Parameters.AddWithValue("p_id", txn.id);
-                        cmd.Parameters.AddWithValue("p_user_id", txn.user_id);
-                        cmd.Parameters.AddWithValue("p_category_id", txn.category_id);
-                        cmd.Parameters.Add("p_type", NpgsqlTypes.NpgsqlDbType.Varchar).Value = (object)txn.type ?? DBNull.Value;
-                        cmd.Parameters.AddWithValue("p_member_id", txn.member_id);
+                        cmd.Parameters.AddWithValue("p_id", notification.id);
+                        cmd.Parameters.AddWithValue("p_user_id", notification.notification_type);
 
                         using (var reader = cmd.ExecuteReader())
                         {
-                            var properties = typeof(TransactionModel).GetProperties();
+                            var properties = typeof(NotificationModel).GetProperties();
 
                             while (reader.Read())
                             {
-                                var item = new TransactionModel();
+                                var item = new NotificationModel();
 
                                 foreach (var property in properties)
                                 {
                                     InternalProcess(property, reader, item);
                                 }
 
-                                txns.Add(item);
+                                notifications.Add(item);
                             }
                         }
                     }
                 }
 
-                return txns;
+                return notifications;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 LogManager.GetCurrentClassLogger().Error(ex);
-                return new List<TransactionModel>();
+                return new List<NotificationModel>();
             }
         }
 
-        private static void InternalProcess(PropertyInfo property, NpgsqlDataReader reader, TransactionModel item)
+        private static void InternalProcess(PropertyInfo property, NpgsqlDataReader reader, NotificationModel item)
         {
             var v = reader[property.Name];
 
@@ -96,7 +93,7 @@ namespace Transaction
             property.SetValue(item, v);
         }
 
-        public int InsertTransaction(TransactionModel txn)
+        public int InsertNotification(NotificationModel notification)
         {
             try
             {
@@ -105,15 +102,15 @@ namespace Transaction
                     conn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                            "SELECT transaction_upsert(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id, @p_value, @p_action)", conn))
+                            "SELECT notification_upsert(@p_id, @p_msg, @p_notification_type, @p_day_of_week, @p_day_of_month, @p_send_time, @p_action)", conn))
                     {
-                        cmd.Parameters.AddWithValue("p_id", txn.id);
-                        cmd.Parameters.AddWithValue("p_user_id", txn.user_id);
-                        cmd.Parameters.AddWithValue("p_category_id", txn.category_id);
-                        cmd.Parameters.AddWithValue("p_type", txn.type);
-                        cmd.Parameters.AddWithValue("p_member_id", txn.member_id);
-                        cmd.Parameters.AddWithValue("p_value", txn.value);
-                        cmd.Parameters.AddWithValue("p_action", NpgsqlTypes.NpgsqlDbType.Text).Value = txn.action ?? (object)DBNull.Value;
+                        cmd.Parameters.AddWithValue("p_id", notification.id);
+                        cmd.Parameters.AddWithValue("p_msg", notification.msg);
+                        cmd.Parameters.AddWithValue("p_notification_type", notification.notification_type);
+                        cmd.Parameters.AddWithValue("p_day_of_week", notification.day_of_week);
+                        cmd.Parameters.AddWithValue("p_day_of_month", notification.day_of_month);
+                        cmd.Parameters.AddWithValue("p_send_time", notification.send_time);
+                        cmd.Parameters.AddWithValue("p_action", NpgsqlTypes.NpgsqlDbType.Text).Value = notification.action ?? (object)DBNull.Value;
 
                         cmd.ExecuteNonQuery();
                     }
@@ -129,7 +126,7 @@ namespace Transaction
             }
         }
 
-        public int DeleteTransactionById(int id)
+        public int DeleteNotificationById(int id)
         {
             try
             {
@@ -137,7 +134,7 @@ namespace Transaction
                 {
                     conn.Open();
 
-                    using (var cmd = new NpgsqlCommand("SELECT transaction_delete(@p_id)", conn))
+                    using (var cmd = new NpgsqlCommand("SELECT notification_delete(@p_id)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", id);
                         cmd.ExecuteNonQuery();
@@ -153,7 +150,7 @@ namespace Transaction
                 return -1;
             }
         }
-       
+
 
         public void Dispose()
         {

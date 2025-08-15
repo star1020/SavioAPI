@@ -8,9 +8,8 @@ namespace Category.API.App_Service
 {
     public interface ICategoryAppService : IApplicationService
     {
-        Tuple<int, List<CategoryModel>> GetAllCategories();
+        Tuple<int, List<CategoryModel>> GetAllCategoriesWithData(CategoryModel request);
         int AddEditCategory(CategoryModel request);
-        Tuple<int, CategoryModel> GetCategoryById(int id);
         int DeleteCategoryById(int id);
     }
     public class CategoryAppService : ICategoryAppService
@@ -21,22 +20,15 @@ namespace Category.API.App_Service
         {
             _categoryService = GlobalContext.CategoryService;
         }
-
-        public Tuple<int, List<CategoryModel>> GetAllCategories()
+        public Tuple<int, List<CategoryModel>> GetAllCategoriesWithData(CategoryModel request)
         {
-            var r = _categoryService.GetAllCategories();
+            var r = _categoryService.GetAllCategoriesWithData(request);
             return new Tuple<int, List<CategoryModel>>(r.Item1, r.Item2);
         }
 
         public int AddEditCategory(CategoryModel request)
         {
             return _categoryService.InsertCategory(request);
-        }
-
-        public Tuple<int, CategoryModel> GetCategoryById(int id)
-        {
-            var r = _categoryService.GetCategoryById(id);
-            return new Tuple<int, CategoryModel>(r.Item1, r.Item2);
         }
 
         public int DeleteCategoryById(int id)

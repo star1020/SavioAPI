@@ -22,47 +22,32 @@ namespace Category
             _db = db;
         }
 
-
-        public Tuple<int, List<CategoryModel>> GetAllCategories()
+        public Tuple<int, List<CategoryModel>> GetAllCategoriesWithData(CategoryModel category)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> no data");
-            var r = _db.GetAllCategories();
+            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(category)}");
+            var r = _db.GetAllCategoriesWithData(category);
             LogManager.GetCurrentClassLogger().Info($"[{method}] CategoryInfo -> {JsonConvert.SerializeObject(r)}");
 
             if (r == null) return new Tuple<int, List<CategoryModel>>(ErrorCode.OperationError, new List<CategoryModel>());
             if (r.Count == 0) return new Tuple<int, List<CategoryModel>>(ErrorCode.OperationError, new List<CategoryModel>());
 
             return new Tuple<int, List<CategoryModel>>(ErrorCode.Success, r);
-
         }
 
-        public int InsertCategory(CategoryModel transaction)
+        public int InsertCategory(CategoryModel category)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(transaction)}");
-            var r = _db.InsertCategory(transaction);
+            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(category)}");
+            var r = _db.InsertCategory(category);
             LogManager.GetCurrentClassLogger().Info($"[{method}] Result -> {JsonConvert.SerializeObject(r)}");
             return r;
-        }
-
-        public Tuple<int, CategoryModel> GetCategoryById(int id)
-        {
-            var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> ${id}");
-            var r = _db.GetCategoryById(id);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] CategoryInfo -> {JsonConvert.SerializeObject(r)}");
-
-            if (r == null) return new Tuple<int, CategoryModel>(ErrorCode.OperationError, new CategoryModel());
-
-            return new Tuple<int, CategoryModel>(ErrorCode.Success, r);
-
         }
 
         public int DeleteCategoryById(int id)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> ${id}");
+            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {id}");
             var r = _db.DeleteCategoryById(id);
             LogManager.GetCurrentClassLogger().Info($"[{method}] CategoryInfo -> {JsonConvert.SerializeObject(r)}");
             return r;

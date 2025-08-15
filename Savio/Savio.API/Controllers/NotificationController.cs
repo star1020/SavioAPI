@@ -4,25 +4,25 @@ using Newtonsoft.Json;
 using NLog;
 using Savio.Core;
 using Savio.Core.Data;
-using Transaction.API.App_Service;
-using Transaction.API.Models;
+using Notification.API.App_Service;
+using Notification.API.Models;
 
-namespace Transaction.API.Controllers
+namespace Notification.API.Controllers
 {
     [ApiController]
-    [Route("transaction")]
-    public class TransactionController : ControllerBase
+    [Route("notification")]
+    public class NotificationController : ControllerBase
     {
-        readonly ITransactionAppService _transactionAppService;
-        public TransactionController()
+        readonly INotificationAppService _notificationAppService;
+        public NotificationController()
         {
-            _transactionAppService = new TransactionAppService();
+            _notificationAppService = new NotificationAppService();
         }
 
         [HttpGet]
         [HttpPost]
-        [Route("GetAllTransactionsWithData")]
-        public IActionResult GetAllTransactionsWithData(TransactionModel request)
+        [Route("GetAllNotificationsWithData")]
+        public IActionResult GetAllNotificationsWithData(NotificationModel request)
         {
             var w = Stopwatch.StartNew();
             var correlationId = Guid.NewGuid().ToString();
@@ -30,13 +30,13 @@ namespace Transaction.API.Controllers
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
 
-            var r = _transactionAppService.GetAllTransactionsWithData(request);
+            var r = _notificationAppService.GetAllNotificationsWithData(request);
 
-            var response = new TransactionResponse
+            var response = new NotificationResponse
             {
                 Code = r.Item1,
                 Message = r.Item1.ToErrorMsg(),
-                Transaction = r.Item2
+                Notification = r.Item2
             };
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
@@ -45,8 +45,8 @@ namespace Transaction.API.Controllers
         }
 
         [HttpPost]
-        [Route("AddEditTransaction")]
-        public IActionResult AddEditTransaction(TransactionModel request)
+        [Route("AddEditNotification")]
+        public IActionResult AddEditNotification(NotificationModel request)
         {
             var w = Stopwatch.StartNew();
             var correlationId = Guid.NewGuid().ToString();
@@ -54,9 +54,9 @@ namespace Transaction.API.Controllers
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
 
-            var r = _transactionAppService.AddEditTransaction(request);
+            var r = _notificationAppService.AddEditNotification(request);
 
-            var response = new TransactionResponse
+            var response = new NotificationResponse
             {
                 Code = r,
                 Message = r.ToErrorMsg(),
@@ -68,8 +68,8 @@ namespace Transaction.API.Controllers
         }
 
         [HttpPost]
-        [Route("DeleteTransactionById/{id:int}")]
-        public IActionResult DeleteTransactionById(int id)
+        [Route("DeleteNotificationById/{id:int}")]
+        public IActionResult DeleteNotificationById(int id)
         {
             var w = Stopwatch.StartNew();
             var correlationId = Guid.NewGuid().ToString();
@@ -77,9 +77,9 @@ namespace Transaction.API.Controllers
 
             LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {id}");
 
-            var r = _transactionAppService.DeleteTransactionById(id);
+            var r = _notificationAppService.DeleteNotificationById(id);
 
-            var response = new TransactionResponse
+            var response = new NotificationResponse
             {
                 Code = r,
                 Message = r.ToErrorMsg(),

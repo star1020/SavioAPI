@@ -6,6 +6,7 @@ using Savio.Core;
 using Savio.Core.Data;
 using Category.API.App_Service;
 using Category.API.Models;
+using Category.API.Models;
 
 namespace Category.API.Controllers
 {
@@ -21,16 +22,16 @@ namespace Category.API.Controllers
 
         [HttpGet]
         [HttpPost]
-        [Route("GetAllCategories")]
-        public IActionResult GetAllCategories()
+        [Route("GetAllCategoriesWithData")]
+        public IActionResult GetAllCategoriesWithData(CategoryModel request)
         {
             var w = Stopwatch.StartNew();
             var correlationId = Guid.NewGuid().ToString();
             string method = LogHelper.GetMethodName();
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> no body");
+            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
 
-            var r = _categoryAppService.GetAllCategories();
+            var r = _categoryAppService.GetAllCategoriesWithData(request);
 
             var response = new CategoryResponse
             {
@@ -67,32 +68,6 @@ namespace Category.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [HttpPost]
-        [Route("GetCategoryById/{id:int}")]
-        public IActionResult GetCategoryById(int id)
-        {
-            var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
-
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> no body");
-
-            var r = _categoryAppService.GetCategoryById(id);
-
-            var response = new GetCategoryResponse
-            {
-                Code = r.Item1,
-                Message = r.Item1.ToErrorMsg(),
-                Category = r.Item2
-            };
-
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
-            return Ok(response);
-        }
-
-        [HttpGet]
         [HttpPost]
         [Route("DeleteCategoryById/{id:int}")]
         public IActionResult DeleteCategoryById(int id)

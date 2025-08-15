@@ -6,16 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Savio.Core.Data;
 
-namespace Transaction.Contract
+namespace Notification.Contract
 {
     [ServiceContract]
-    public interface ITransactionService
+    public interface INotificationService
     {
         [OperationContract]
-        Tuple<int, List<TransactionModel>> GetAllTransactionsWithData(TransactionModel transaction);
+        Tuple<int, List<NotificationModel>> GetAllNotificationsWithData(NotificationModel notification);
         [OperationContract]
-        int InsertTransaction(TransactionModel user);
+        int InsertNotification(NotificationModel user);
         [OperationContract]
-        int DeleteTransactionById(int id);
+        int DeleteNotificationById(int id);
     }
 }

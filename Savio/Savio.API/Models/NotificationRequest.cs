@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Category.API.Models
+namespace Notification.API.Models
 {
-    public class CategoryResponse
+    public class NotificationResponse
     {
         public int Code { get; set; }
         public string Message { get; set; }
-        public List<CategoryModel> Category { get; set; }
+        public List<NotificationModel> Notification { get; set; }
     }
+
 }

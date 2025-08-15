@@ -26,6 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Category.Contract\Category.Contract.csproj" />
     <ProjectReference Include="..\Category\Category.csproj" />
+    <ProjectReference Include="..\Notification.Contract\Notification.Contract.csproj" />
+    <ProjectReference Include="..\Notification\Notification.csproj" />
     <ProjectReference Include="..\Savio.Core.Data\Savio.Core.Data.csproj" />
     <ProjectReference Include="..\Savio.Core\Savio.Core.csproj" />
     <ProjectReference Include="..\Transaction.Contract\Transaction.Contract.csproj" />

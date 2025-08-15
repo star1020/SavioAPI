@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6746475D-5CA9-47F5-8632-366B52DE9B2B}</ProjectGuid>
+    <ProjectGuid>{F9F8D154-334E-4499-822F-4842919EEEEA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Savio.Core.Data</RootNamespace>
-    <AssemblyName>Savio.Core.Data</AssemblyName>
+    <RootNamespace>Notification.Contract</RootNamespace>
+    <AssemblyName>Notification.Contract</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,12 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CategoryModel.cs" />
-    <Compile Include="ErrorCode.cs" />
-    <Compile Include="NotificationModel.cs" />
-    <Compile Include="TransactionModel.cs" />
-    <Compile Include="UserModel.cs" />
+    <Compile Include="INotificationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Savio.Core.Data\Savio.Core.Data.csproj">
+      <Project>{6746475d-5ca9-47f5-8632-366b52de9b2b}</Project>
+      <Name>Savio.Core.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

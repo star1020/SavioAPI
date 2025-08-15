@@ -9,6 +9,8 @@ using Transaction.Contract;
 using Category.Contract;
 using Transaction;
 using Category;
+using Notification;
+using Notification.Contract;
 
 namespace Savio.API
 {
@@ -20,6 +22,8 @@ namespace Savio.API
         private static ITransactionRepository TransactionRepository { get; }
         public static ICategoryService CategoryService { get; }
         private static ICategoryRepository CategoryRepository { get; }
+        public static INotificationService NotificationService { get; }
+        private static INotificationRepository NotificationRepository { get; }
 
         static GlobalContext()
         {
@@ -33,6 +37,8 @@ namespace Savio.API
                 TransactionService = new TransactionService(TransactionRepository);
                 CategoryRepository = new CategoryRepository(configuration);
                 CategoryService = new CategoryService(CategoryRepository);
+                NotificationRepository = new NotificationRepository(configuration);
+                NotificationService = new NotificationService(NotificationRepository);
             }
             catch (Exception ex)
             {

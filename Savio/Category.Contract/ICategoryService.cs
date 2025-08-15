@@ -12,11 +12,9 @@ namespace Category.Contract
     public interface ICategoryService
     {
         [OperationContract]
-        Tuple<int, List<CategoryModel>> GetAllCategories();
+        Tuple<int, List<CategoryModel>> GetAllCategoriesWithData(CategoryModel category);
         [OperationContract]
         int InsertCategory(CategoryModel user);
-        [OperationContract]
-        Tuple<int, CategoryModel> GetCategoryById(int id);
         [OperationContract]
         int DeleteCategoryById(int id);
     }

@@ -46,7 +46,7 @@ namespace Notification
                         "SELECT * FROM notification_get_all_with_data(@p_id, @p_notification_type)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", notification.id);
-                        cmd.Parameters.AddWithValue("p_user_id", notification.notification_type);
+                        cmd.Parameters.AddWithValue("p_notification_type", notification.notification_type);
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -137,7 +137,11 @@ namespace Notification
                     using (var cmd = new NpgsqlCommand("SELECT notification_delete(@p_id)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", id);
-                        cmd.ExecuteNonQuery();
+                        var result = (int)cmd.ExecuteScalar();
+                        if (result == 0)
+                        {
+                            throw new Exception($"Notification with id {id} not found.");
+                        }
                     }
 
                     return 0;

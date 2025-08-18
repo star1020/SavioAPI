@@ -134,7 +134,11 @@ namespace Category
                     using (var cmd = new NpgsqlCommand("SELECT category_delete(@p_id)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", id);
-                        cmd.ExecuteNonQuery();
+                        var result = (int)cmd.ExecuteScalar();
+                        if (result == 0)
+                        {
+                            throw new Exception($"Category with id {id} not found.");
+                        }
                     }
 
                     return 0;

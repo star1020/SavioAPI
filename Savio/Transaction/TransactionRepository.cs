@@ -43,13 +43,16 @@ namespace Transaction
                     conn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                        "SELECT * FROM transaction_get_all_with_data(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id)", conn))
+                        "SELECT * FROM transaction_get_all_with_data(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id, @p_record_date)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", txn.id);
                         cmd.Parameters.AddWithValue("p_user_id", txn.user_id);
                         cmd.Parameters.AddWithValue("p_category_id", txn.category_id);
                         cmd.Parameters.Add("p_type", NpgsqlTypes.NpgsqlDbType.Varchar).Value = (object)txn.type ?? DBNull.Value;
                         cmd.Parameters.AddWithValue("p_member_id", txn.member_id);
+                        cmd.Parameters.Add("p_record_date", NpgsqlTypes.NpgsqlDbType.Date).Value = txn.record_date == null
+                                                    ? (object)DBNull.Value
+                                                    : txn.record_date?.Date;
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -105,7 +108,7 @@ namespace Transaction
                     conn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                            "SELECT transaction_upsert(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id, @p_value, @p_action)", conn))
+                            "SELECT transaction_upsert(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id, @p_value, @p_record_date, @p_action)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", txn.id);
                         cmd.Parameters.AddWithValue("p_user_id", txn.user_id);
@@ -113,6 +116,7 @@ namespace Transaction
                         cmd.Parameters.AddWithValue("p_type", txn.type);
                         cmd.Parameters.AddWithValue("p_member_id", txn.member_id);
                         cmd.Parameters.AddWithValue("p_value", txn.value);
+                        cmd.Parameters.AddWithValue("p_record_date", txn.record_date);
                         cmd.Parameters.AddWithValue("p_action", NpgsqlTypes.NpgsqlDbType.Text).Value = txn.action ?? (object)DBNull.Value;
 
                         cmd.ExecuteNonQuery();

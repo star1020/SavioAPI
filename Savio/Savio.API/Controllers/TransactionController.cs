@@ -14,9 +14,11 @@ namespace Transaction.API.Controllers
     public class TransactionController : ControllerBase
     {
         readonly ITransactionAppService _transactionAppService;
+        public readonly string _controllerName;
         public TransactionController()
         {
             _transactionAppService = new TransactionAppService();
+            _controllerName = GetType().Name;
         }
 
         [HttpGet]
@@ -25,10 +27,9 @@ namespace Transaction.API.Controllers
         public IActionResult GetAllTransactionsWithData(TransactionModel request)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
+            LogHelper.Logging(_controllerName, method, request, true);
 
             var r = _transactionAppService.GetAllTransactionsWithData(request);
 
@@ -39,8 +40,7 @@ namespace Transaction.API.Controllers
                 Transaction = r.Item2
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
 
@@ -49,10 +49,9 @@ namespace Transaction.API.Controllers
         public IActionResult AddEditTransaction(TransactionModel request)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
+            LogHelper.Logging(_controllerName, method, request, true);
 
             var r = _transactionAppService.AddEditTransaction(request);
 
@@ -62,8 +61,7 @@ namespace Transaction.API.Controllers
                 Message = r.ToErrorMsg(),
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
 
@@ -72,10 +70,9 @@ namespace Transaction.API.Controllers
         public IActionResult DeleteTransactionById(int id)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {id}");
+            LogHelper.Logging(_controllerName, method, id, true);
 
             var r = _transactionAppService.DeleteTransactionById(id);
 
@@ -85,8 +82,7 @@ namespace Transaction.API.Controllers
                 Message = r.ToErrorMsg(),
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
     }

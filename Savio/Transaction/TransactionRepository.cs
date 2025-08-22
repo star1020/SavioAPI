@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using NLog;
 using Npgsql;
+using Savio.Core;
 using Savio.Core.Data;
 
 namespace Transaction
@@ -77,8 +78,7 @@ namespace Transaction
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                LogManager.GetCurrentClassLogger().Error(ex);
+                LogHelper.LoggingException(ex);
                 return new List<TransactionModel>();
             }
         }
@@ -127,8 +127,7 @@ namespace Transaction
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                LogManager.GetCurrentClassLogger().Error(ex);
+                LogHelper.LoggingException(ex);
                 return -1;
             }
         }
@@ -156,8 +155,7 @@ namespace Transaction
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                LogManager.GetCurrentClassLogger().Error(ex);
+                LogHelper.LoggingException(ex);
                 return -1;
             }
         }

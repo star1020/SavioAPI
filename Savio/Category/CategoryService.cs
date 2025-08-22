@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Category.Contract;
 using Newtonsoft.Json;
 using NLog;
+using Savio.Core;
 using Savio.Core.Data;
 
 namespace Category
@@ -16,7 +17,7 @@ namespace Category
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _db;
-
+        public string className = MethodBase.GetCurrentMethod().DeclaringType.Name;
         public CategoryService(ICategoryRepository db)
         {
             _db = db;
@@ -25,9 +26,9 @@ namespace Category
         public Tuple<int, List<CategoryModel>> GetAllCategoriesWithData(CategoryModel category)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(category)}");
+            LogHelper.Logging(className, method, category, true);
             var r = _db.GetAllCategoriesWithData(category);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] CategoryInfo -> {JsonConvert.SerializeObject(r)}");
+            LogHelper.Logging(className, method, r, false);
 
             if (r == null) return new Tuple<int, List<CategoryModel>>(ErrorCode.OperationError, new List<CategoryModel>());
             if (r.Count == 0) return new Tuple<int, List<CategoryModel>>(ErrorCode.OperationError, new List<CategoryModel>());
@@ -38,18 +39,18 @@ namespace Category
         public int InsertCategory(CategoryModel category)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(category)}");
+            LogHelper.Logging(className, method, category, true);
             var r = _db.InsertCategory(category);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] Result -> {JsonConvert.SerializeObject(r)}");
+            LogHelper.Logging(className, method, r, false);
             return r;
         }
 
         public int DeleteCategoryById(int id)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {id}");
+            LogHelper.Logging(className, method, id, true);
             var r = _db.DeleteCategoryById(id);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] CategoryInfo -> {JsonConvert.SerializeObject(r)}");
+            LogHelper.Logging(className, method, r, false);
             return r;
         }
     }

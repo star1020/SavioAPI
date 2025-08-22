@@ -70,6 +70,10 @@
       <Project>{6746475d-5ca9-47f5-8632-366b52de9b2b}</Project>
       <Name>Savio.Core.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Savio.Core\Savio.Core.csproj">
+      <Project>{494DC306-817F-40E0-95CB-CADE244875EA}</Project>
+      <Name>Savio.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

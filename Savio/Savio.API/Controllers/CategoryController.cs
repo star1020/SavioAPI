@@ -6,7 +6,6 @@ using Savio.Core;
 using Savio.Core.Data;
 using Category.API.App_Service;
 using Category.API.Models;
-using Category.API.Models;
 
 namespace Category.API.Controllers
 {
@@ -15,9 +14,11 @@ namespace Category.API.Controllers
     public class CategoryController : ControllerBase
     {
         readonly ICategoryAppService _categoryAppService;
+        public readonly string _controllerName;
         public CategoryController()
         {
             _categoryAppService = new CategoryAppService();
+            _controllerName = GetType().Name;
         }
 
         [HttpGet]
@@ -26,10 +27,9 @@ namespace Category.API.Controllers
         public IActionResult GetAllCategoriesWithData(CategoryModel request)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
+            LogHelper.Logging(_controllerName, method, request, true);
 
             var r = _categoryAppService.GetAllCategoriesWithData(request);
 
@@ -40,8 +40,7 @@ namespace Category.API.Controllers
                 Category = r.Item2
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
 
@@ -50,10 +49,9 @@ namespace Category.API.Controllers
         public IActionResult AddEditCategory(CategoryModel request)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
+            LogHelper.Logging(_controllerName, method, request, true);
 
             var r = _categoryAppService.AddEditCategory(request);
 
@@ -63,8 +61,7 @@ namespace Category.API.Controllers
                 Message = r.ToErrorMsg(),
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
 
@@ -73,10 +70,9 @@ namespace Category.API.Controllers
         public IActionResult DeleteCategoryById(int id)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {id}");
+            LogHelper.Logging(_controllerName, method, id, true);
 
             var r = _categoryAppService.DeleteCategoryById(id);
 
@@ -86,8 +82,7 @@ namespace Category.API.Controllers
                 Message = r.ToErrorMsg(),
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
     }

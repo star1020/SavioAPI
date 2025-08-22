@@ -14,9 +14,11 @@ namespace Notification.API.Controllers
     public class NotificationController : ControllerBase
     {
         readonly INotificationAppService _notificationAppService;
+        public readonly string _controllerName;
         public NotificationController()
         {
             _notificationAppService = new NotificationAppService();
+            _controllerName = GetType().Name;
         }
 
         [HttpGet]
@@ -25,10 +27,9 @@ namespace Notification.API.Controllers
         public IActionResult GetAllNotificationsWithData(NotificationModel request)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
+            LogHelper.Logging(_controllerName, method, request, true);
 
             var r = _notificationAppService.GetAllNotificationsWithData(request);
 
@@ -39,8 +40,7 @@ namespace Notification.API.Controllers
                 Notification = r.Item2
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
 
@@ -49,10 +49,9 @@ namespace Notification.API.Controllers
         public IActionResult AddEditNotification(NotificationModel request)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {request}");
+            LogHelper.Logging(_controllerName, method, request, true);
 
             var r = _notificationAppService.AddEditNotification(request);
 
@@ -62,8 +61,7 @@ namespace Notification.API.Controllers
                 Message = r.ToErrorMsg(),
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
 
@@ -72,10 +70,9 @@ namespace Notification.API.Controllers
         public IActionResult DeleteNotificationById(int id)
         {
             var w = Stopwatch.StartNew();
-            var correlationId = Guid.NewGuid().ToString();
-            string method = LogHelper.GetMethodName();
+            string method = ControllerContext.ActionDescriptor.ActionName;
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Request -> {id}");
+            LogHelper.Logging(_controllerName, method, id, true);
 
             var r = _notificationAppService.DeleteNotificationById(id);
 
@@ -85,8 +82,7 @@ namespace Notification.API.Controllers
                 Message = r.ToErrorMsg(),
             };
 
-            LogManager.GetCurrentClassLogger().Info($"[{correlationId}] {method} Response -> {JsonConvert.SerializeObject(response)} | TotalProcessedTimeMls = [{w.ElapsedMilliseconds}]");
-
+            LogHelper.Logging(_controllerName, method, response, false);
             return Ok(response);
         }
     }

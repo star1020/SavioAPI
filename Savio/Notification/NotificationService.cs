@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using NLog;
 using Savio.Core.Data;
 using Notification.Contract;
+using Savio.Core;
 
 namespace Notification
 {
@@ -16,7 +17,7 @@ namespace Notification
     public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _db;
-
+        public string className = MethodBase.GetCurrentMethod().DeclaringType.Name;
         public NotificationService(INotificationRepository db)
         {
             _db = db;
@@ -25,9 +26,9 @@ namespace Notification
         public Tuple<int, List<NotificationModel>> GetAllNotificationsWithData(NotificationModel notification)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(notification)}");
+            LogHelper.Logging(className, method, notification, true);
             var r = _db.GetAllNotificationsWithData(notification);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] NotificationInfo -> {JsonConvert.SerializeObject(r)}");
+            LogHelper.Logging(className, method, r, false);
 
             if (r == null) return new Tuple<int, List<NotificationModel>>(ErrorCode.OperationError, new List<NotificationModel>());
             if (r.Count == 0) return new Tuple<int, List<NotificationModel>>(ErrorCode.OperationError, new List<NotificationModel>());
@@ -38,18 +39,18 @@ namespace Notification
         public int InsertNotification(NotificationModel notification)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {JsonConvert.SerializeObject(notification)}");
+            LogHelper.Logging(className, method, notification, true);
             var r = _db.InsertNotification(notification);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] Result -> {JsonConvert.SerializeObject(r)}");
+            LogHelper.Logging(className, method, r, false);
             return r;
         }
 
         public int DeleteNotificationById(int id)
         {
             var method = MethodBase.GetCurrentMethod().Name;
-            LogManager.GetCurrentClassLogger().Info($"[{method}] RequestInfo -> {id}");
+            LogHelper.Logging(className, method, id, true);
             var r = _db.DeleteNotificationById(id);
-            LogManager.GetCurrentClassLogger().Info($"[{method}] NotificationInfo -> {JsonConvert.SerializeObject(r)}");
+            LogHelper.Logging(className, method, r, false);
             return r;
         }
 

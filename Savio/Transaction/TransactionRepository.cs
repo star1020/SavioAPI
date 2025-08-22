@@ -108,7 +108,7 @@ namespace Transaction
                     conn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                            "SELECT transaction_upsert(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id, @p_value, @p_record_date, @p_action)", conn))
+                            "SELECT transaction_upsert(@p_id, @p_user_id, @p_category_id, @p_type, @p_member_id, @p_value, @p_record_date, @p_desc, @p_action)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_id", txn.id);
                         cmd.Parameters.AddWithValue("p_user_id", txn.user_id);
@@ -117,6 +117,7 @@ namespace Transaction
                         cmd.Parameters.AddWithValue("p_member_id", txn.member_id);
                         cmd.Parameters.AddWithValue("p_value", txn.value);
                         cmd.Parameters.AddWithValue("p_record_date", txn.record_date);
+                        cmd.Parameters.AddWithValue("p_desc", NpgsqlTypes.NpgsqlDbType.Text).Value = txn.desc ?? (object)DBNull.Value;
                         cmd.Parameters.AddWithValue("p_action", NpgsqlTypes.NpgsqlDbType.Text).Value = txn.action ?? (object)DBNull.Value;
 
                         cmd.ExecuteNonQuery();

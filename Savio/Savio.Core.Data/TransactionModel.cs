@@ -15,6 +15,7 @@ namespace Savio.Core.Data
         public int member_id { get; set; }
         public decimal value { get; set; }
         public DateTime? record_date { get; set; }
+        public string desc { get; set; }
         public string action { get; set; }
         public DateTime? created_at { get; set; }
         public DateTime? updated_at { get; set; }

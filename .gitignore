@@ -6,3 +6,5 @@
 */*/logs/app-log.txt
 Savio/Savio.API/.vs/Savio.API.csproj.dtbcache.json
 Savio/Savio.API/logs/*
+
+/Savio/Savio.API/Properties/PublishProfiles/*
